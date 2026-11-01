@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { MENU_ITEMS, MenuItem } from "@/data/menu";
 import { MENU_SECTIONS } from "@/data/sections";
+import { useSearchStore } from "@/lib/search-store";
 import { Navbar } from "@/components/Navbar";
 import { HeroBannerSlider } from "@/components/HeroBannerSlider";
 import { CategoryBar } from "@/components/CategoryBar";
@@ -17,7 +18,8 @@ import { Footer } from "@/components/Footer";
 
 export default function SinglePageMenu() {
   const [activeCategory, setActiveCategory] = useState<string>("deals");
-  const [searchQuery, setSearchQuery] = useState("");
+  const { query: searchQuery, setQuery: setSearchQuery } = useSearchStore();
+  const isSearching = searchQuery.trim().length > 0;
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -83,7 +85,22 @@ export default function SinglePageMenu() {
     });
 
     return () => observer.disconnect();
-  }, []);
+    // Sections remount after a search is cleared, so observe them again
+  }, [isSearching]);
+
+  // Bring the results into view when a search starts from the navbar
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const wasSearchingRef = useRef(false);
+  useEffect(() => {
+    if (isSearching && !wasSearchingRef.current && resultsRef.current) {
+      const isDesktop = window.innerWidth >= 640;
+      const navOffset = isDesktop ? 132 : 112; // Navbar + CategoryBar + padding
+      const top =
+        resultsRef.current.getBoundingClientRect().top + window.scrollY - navOffset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+    wasSearchingRef.current = isSearching;
+  }, [isSearching]);
 
   // Smart relevance-ranked search results
   const searchResults = useMemo(() => {
@@ -164,57 +181,11 @@ export default function SinglePageMenu() {
           onSelectCategory={scrollToCategory}
         />
 
-        {/* 4. Live Search Input & Popular Quick Filters */}
-        <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-1 sm:pb-2">
-          <div className="relative w-full max-w-xl">
-            <Search className="w-4 h-4 text-brand-black/60 absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 stroke-[2.5]" />
-            <input
-              id="menu-search-input"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search dishes (e.g. pizza, burger, wings, box)..."
-              className="w-full pl-10 sm:pl-11 pr-9 sm:pr-10 py-2.5 sm:py-3 rounded-full sm:rounded-2xl bg-card-white border border-brand-black/25 shadow-xs text-base sm:text-sm text-brand-black placeholder:text-text-muted outline-none font-medium font-[family-name:var(--font-body)] focus:border-brand-orange transition-all"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                aria-label="Clear search"
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-brand-orange p-1 cursor-pointer transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-
-          {/* Quick Popular Search Tags */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-2">
-            <span className="text-[10px] sm:text-[11px] font-[family-name:var(--font-chunky)] text-text-muted uppercase tracking-wider shrink-0">
-              Popular:
-            </span>
-            {["Pizzas", "Deals", "Burgers", "Wings", "Pastas", "Drinks"].map((tag) => {
-              const isActive = searchQuery.toLowerCase() === tag.toLowerCase();
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => setSearchQuery(isActive ? "" : tag)}
-                  className={`shrink-0 px-2.5 sm:px-3 py-1 rounded-full border text-[10px] sm:text-xs font-[family-name:var(--font-chunky)] uppercase tracking-wider transition-all cursor-pointer ${
-                    isActive
-                      ? "bg-brand-orange text-brand-black border-brand-black shadow-hard-sm"
-                      : "bg-card-white hover:bg-cream-alt text-brand-black border-brand-black/25 shadow-xs"
-                  }`}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 5. Menu Sections OR Search Results Grid */}
-        <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-8">
+        {/* 4. Menu Sections OR Search Results Grid */}
+        <div
+          ref={resultsRef}
+          className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-8"
+        >
           {searchQuery.trim().length > 0 ? (
             /* ==================== SEARCH RESULTS VIEW ==================== */
             searchResults.length === 0 ? (
@@ -226,7 +197,7 @@ export default function SinglePageMenu() {
                   No dishes found
                 </h3>
                 <p className="text-xs text-text-muted max-w-xs mx-auto font-medium font-[family-name:var(--font-body)]">
-                  We couldn&apos;t find anything matching &ldquo;{searchQuery}&rdquo;. Try another term or choose a popular dish above.
+                  We couldn&apos;t find anything matching &ldquo;{searchQuery}&rdquo;. Try another term or pick a category above.
                 </p>
                 <button
                   type="button"
@@ -321,7 +292,7 @@ export default function SinglePageMenu() {
         </div>
       </main>
 
-      {/* Floating Buttons: Search & Back to top */}
+      {/* Floating Back to top Button */}
       <FloatingControls />
 
       {/* Slide-over / Bottom sheet Cart Drawer */}

@@ -1,16 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, ChevronDown, MapPin, User } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ShoppingBag, ChevronDown, MapPin, User, Search, X } from "lucide-react";
 import { useCartStore } from "@/lib/cart-store";
+import { useSearchStore } from "@/lib/search-store";
 import { DeliveryModal } from "./DeliveryModal";
+import { NavbarSearch } from "./NavbarSearch";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Navbar: React.FC = () => {
   const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  // Keep the mobile search row open when arriving home with an active search
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(
+    () => isHome && useSearchStore.getState().query.trim().length > 0
+  );
+  const clearQuery = useSearchStore((state) => state.clearQuery);
+
+  // Results only show on the home page, so don't carry a search to other pages
+  useEffect(() => {
+    if (!isHome) clearQuery();
+  }, [isHome, clearQuery]);
+
+  const closeMobileSearch = () => {
+    clearQuery();
+    setMobileSearchOpen(false);
+  };
 
   const {
     openCart,
@@ -75,8 +95,20 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
 
-          {/* Right: Sign In Outlined Pill & Orange Square Cart Button */}
+          {/* Center: Search bar (desktop) */}
+          <NavbarSearch className="hidden lg:block flex-1 max-w-[420px]" />
+
+          {/* Right: Search Icon (mobile), Sign In Outlined Pill & Orange Square Cart Button */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={() => setMobileSearchOpen(true)}
+              aria-label="Search the menu"
+              className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-card-white hover:bg-cream-alt text-brand-black border-2 border-brand-black flex items-center justify-center transition-colors cursor-pointer"
+            >
+              <Search className="w-5 h-5 stroke-[2.5]" />
+            </button>
+
             {/* Outlined Sign In / Register Pill (UI Only) */}
             <button
               type="button"
@@ -107,6 +139,21 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Mobile search row: covers the navbar row so nothing below shifts */}
+        {mobileSearchOpen && (
+          <div className="lg:hidden absolute inset-0 bg-cream-bg flex items-center gap-2 px-3 sm:px-6">
+            <NavbarSearch autoFocus onClose={closeMobileSearch} className="flex-1" />
+            <button
+              type="button"
+              onClick={closeMobileSearch}
+              aria-label="Close search"
+              className="w-10 h-10 shrink-0 rounded-xl bg-card-white hover:bg-cream-alt text-brand-black border-2 border-brand-black flex items-center justify-center transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5 stroke-[2.5]" />
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Delivery / Takeaway Location Modal */}
