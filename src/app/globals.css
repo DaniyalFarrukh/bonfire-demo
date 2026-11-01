@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-bg: #F8EDD6;
+  --color-cream-alt: #F0DFBF;
+  --color-brand-orange: #EF4A22;
+  --color-brand-orange-hover: #CF3A14;
+  --color-brand-black: #141414;
+  --color-card-white: #FFFFFF;
+  --color-text-muted: #5C5549;
+
+  --shadow-hard: 4px 4px 0px 0px #141414;
+  --shadow-hard-sm: 2px 2px 0px 0px #141414;
+  --shadow-hard-lg: 6px 6px 0px 0px #141414;
+  --shadow-hard-orange: 4px 4px 0px 0px #EF4A22;
+
+  --font-brush: var(--font-brush), cursive;
+  --font-chunky: var(--font-chunky), "Arial Black", sans-serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+}
+
+:root {
+  --background: var(--color-cream-bg);
+  --foreground: var(--color-brand-black);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+  accent-color: var(--color-brand-orange);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-cream-bg);
+  color: var(--color-brand-black);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Custom scrollbar matching street-food cream & black */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream-alt);
+  border-left: 2px solid var(--color-brand-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-black);
+  border: 2px solid var(--color-cream-alt);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-orange);
+}
+
+/* Accessible focus styling */
+:focus-visible {
+  outline: 2px solid var(--color-brand-orange) !important;
+  outline-offset: 2px !important;
+  box-shadow: 2px 2px 0px 0px var(--color-brand-black) !important;
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Prevent iOS Safari auto-zoom on form inputs */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Horizontal momentum scrolling on iOS */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for category tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Sticker Photo styling */
+.sticker-photo {
+  border: 3px solid var(--color-brand-black);
+  box-shadow: 4px 4px 0px var(--color-brand-black);
+}
+
+/* Infinite Marquee Ticker */
+@keyframes tickerLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: tickerLoop 22s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Flame flicker animation */
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.04) rotate(-1.5deg);
+  }
+  50% {
+    transform: scale(0.98) rotate(1deg);
+  }
+  75% {
+    transform: scale(1.02) rotate(-0.5deg);
+  }
+}
+
+.animate-flame {
+  animation: flameFlicker 2.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
