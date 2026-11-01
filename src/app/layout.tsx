@@ -28,8 +28,15 @@ export const metadata: Metadata = {
   description:
     "Hand-tossed wood-fired pizzas, crispy smashed zingers, and sizzling wings fired up at 900°F. DHA Lahore.",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/logo.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 
