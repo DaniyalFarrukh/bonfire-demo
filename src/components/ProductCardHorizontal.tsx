@@ -49,10 +49,10 @@ export const ProductCardHorizontal: React.FC<ProductCardHorizontalProps> = ({
   return (
     <article
       onClick={() => onSelect(item)}
-      className="group relative flex gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-2xl bg-card-white border border-brand-black/15 hover:border-brand-black/40 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden min-h-[148px]"
+      className="group relative flex gap-2.5 sm:gap-4 p-2.5 sm:p-3.5 rounded-2xl bg-card-white border border-brand-black/15 hover:border-brand-black/40 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden min-h-[115px] sm:min-h-[148px]"
     >
       {/* Left Column: Food Image on a Pale Tile */}
-      <div className="relative w-24 sm:w-28 h-24 sm:h-28 aspect-square rounded-xl overflow-hidden shrink-0 bg-cream-alt border border-brand-black/10 flex items-center justify-center p-1">
+      <div className="relative w-20 sm:w-28 h-20 sm:h-28 aspect-square rounded-xl overflow-hidden shrink-0 bg-cream-alt border border-brand-black/10 flex items-center justify-center p-1">
         {item.image ? (
           <Image
             src={item.image}

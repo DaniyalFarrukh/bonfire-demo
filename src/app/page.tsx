@@ -47,7 +47,7 @@ export default function SinglePageMenu() {
     const target = document.getElementById(sectionId);
     if (target) {
       const isDesktop = typeof window !== "undefined" && window.innerWidth >= 640;
-      const navOffset = isDesktop ? 148 : 130; // Navbar + CategoryBar + padding
+      const navOffset = isDesktop ? 132 : 112; // Navbar + CategoryBar + padding
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - navOffset;
 
@@ -165,16 +165,16 @@ export default function SinglePageMenu() {
         />
 
         {/* 4. Live Search Input & Popular Quick Filters */}
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+        <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-1 sm:pb-2">
           <div className="relative w-full max-w-xl">
-            <Search className="w-4 h-4 text-brand-black/60 absolute left-4 top-1/2 -translate-y-1/2 stroke-[2.5]" />
+            <Search className="w-4 h-4 text-brand-black/60 absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 stroke-[2.5]" />
             <input
               id="menu-search-input"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search dishes (e.g. pizza, burger, wings, box)..."
-              className="w-full pl-11 pr-10 py-3 rounded-2xl bg-card-white border-2 border-brand-black shadow-hard-sm text-base sm:text-sm text-brand-black placeholder:text-text-muted outline-none font-medium font-[family-name:var(--font-body)] focus:border-brand-orange transition-all"
+              className="w-full pl-10 sm:pl-11 pr-9 sm:pr-10 py-2.5 sm:py-3 rounded-full sm:rounded-2xl bg-card-white border border-brand-black/25 shadow-xs text-base sm:text-sm text-brand-black placeholder:text-text-muted outline-none font-medium font-[family-name:var(--font-body)] focus:border-brand-orange transition-all"
             />
             {searchQuery && (
               <button
@@ -189,8 +189,8 @@ export default function SinglePageMenu() {
           </div>
 
           {/* Quick Popular Search Tags */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-2.5">
-            <span className="text-[11px] font-[family-name:var(--font-chunky)] text-text-muted uppercase tracking-wider shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-2">
+            <span className="text-[10px] sm:text-[11px] font-[family-name:var(--font-chunky)] text-text-muted uppercase tracking-wider shrink-0">
               Popular:
             </span>
             {["Pizzas", "Deals", "Burgers", "Wings", "Pastas", "Drinks"].map((tag) => {
@@ -200,10 +200,10 @@ export default function SinglePageMenu() {
                   key={tag}
                   type="button"
                   onClick={() => setSearchQuery(isActive ? "" : tag)}
-                  className={`shrink-0 px-3 py-1 rounded-full border text-xs font-[family-name:var(--font-chunky)] uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`shrink-0 px-2.5 sm:px-3 py-1 rounded-full border text-[10px] sm:text-xs font-[family-name:var(--font-chunky)] uppercase tracking-wider transition-all cursor-pointer ${
                     isActive
                       ? "bg-brand-orange text-brand-black border-brand-black shadow-hard-sm"
-                      : "bg-card-white hover:bg-cream-alt text-brand-black border-brand-black/40"
+                      : "bg-card-white hover:bg-cream-alt text-brand-black border-brand-black/25 shadow-xs"
                   }`}
                 >
                   {tag}
@@ -214,7 +214,7 @@ export default function SinglePageMenu() {
         </div>
 
         {/* 5. Menu Sections OR Search Results Grid */}
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+        <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-8">
           {searchQuery.trim().length > 0 ? (
             /* ==================== SEARCH RESULTS VIEW ==================== */
             searchResults.length === 0 ? (
@@ -273,7 +273,7 @@ export default function SinglePageMenu() {
             )
           ) : (
             /* ==================== NORMAL CATEGORY SECTIONS VIEW ==================== */
-            <div className="space-y-14 sm:space-y-16 pt-4">
+            <div className="space-y-8 sm:space-y-14 pt-2">
               {MENU_SECTIONS.map((sec) => {
                 const items = sectionItemsMap[sec.id] || [];
                 if (items.length === 0) return null;
@@ -282,15 +282,15 @@ export default function SinglePageMenu() {
                   <section
                     key={sec.id}
                     id={sec.id}
-                    className="scroll-mt-36 transition-all"
+                    className="scroll-mt-32 transition-all"
                   >
                     {/* Bold Section Heading */}
-                    <div className="flex items-center justify-between pb-3 mb-4 border-b-2 border-brand-black/20">
-                      <div className="flex items-center gap-3">
-                        <h2 className="font-[family-name:var(--font-chunky)] text-2xl sm:text-3xl text-brand-black uppercase tracking-tight">
+                    <div className="flex items-center justify-between pb-2 sm:pb-3 mb-3 sm:mb-4 border-b border-brand-black/20">
+                      <div className="flex items-center gap-2.5">
+                        <h2 className="font-[family-name:var(--font-chunky)] text-xl sm:text-3xl text-brand-black uppercase tracking-tight">
                           {sec.title}
                         </h2>
-                        <span className="px-2.5 py-0.5 rounded-full bg-cream-alt border border-brand-black text-[11px] font-[family-name:var(--font-chunky)] text-brand-black">
+                        <span className="px-2 py-0.5 rounded-full bg-cream-alt border border-brand-black/30 text-[10px] sm:text-[11px] font-[family-name:var(--font-chunky)] text-brand-black">
                           {items.length}
                         </span>
                       </div>
@@ -304,7 +304,7 @@ export default function SinglePageMenu() {
                     <CategoryBanner section={sec} />
 
                     {/* Product Cards Grid: 3 columns desktop, 2 tablet, 1 mobile */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
                       {items.map((item) => (
                         <ProductCardHorizontal
                           key={item.id}

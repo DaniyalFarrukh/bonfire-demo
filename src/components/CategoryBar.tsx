@@ -32,7 +32,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
   }, [activeCategory]);
 
   return (
-    <div className="sticky top-[72px] sm:top-[84px] z-30 w-full bg-brand-black border-b border-brand-black shadow-md">
+    <div className="sticky top-[64px] sm:top-[76px] z-30 w-full bg-brand-black border-b border-brand-black shadow-md">
       <div className="relative max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8">
         <div
           ref={containerRef}
@@ -52,7 +52,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
                 aria-selected={isActive}
                 type="button"
                 onClick={() => onSelectCategory(sec.id)}
-                className={`shrink-0 relative py-3.5 px-3 sm:px-4 text-xs sm:text-sm font-[family-name:var(--font-chunky)] uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 ${
+                className={`shrink-0 relative py-2.5 sm:py-3.5 px-3 sm:px-4 text-[11px] sm:text-sm font-[family-name:var(--font-chunky)] uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1.5 ${
                   isActive ? "text-white" : "text-white/70 hover:text-white"
                 }`}
               >
